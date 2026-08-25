@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>মিলাদুন্নবী মাহফিল হিসাব</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Bengali:wght@600;700&family=Hind+Siliguri:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="app-shell">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="crescent">☪</span>
+      <h1>মিলাদুন্নবী<br>মাহফিল হিসাব</h1>
+      <small>কমিটি ড্যাশবোর্ড</small>
+    </div>
+    <nav>
+      <div class="nav-item active" data-section="dashboard">📊 ড্যাশবোর্ড</div>
+      <div class="nav-item" data-section="chanda">💰 চাঁদা</div>
+      <div class="nav-item" data-section="kharoch">🧾 খরচ</div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="who">লগইন: <span id="whoEmail">...</span></div>
+      <button class="btn-logout" id="logoutBtn">লগআউট</button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- ===== DASHBOARD ===== -->
+    <section class="section active" id="section-dashboard">
+
+      <div class="event-banner">
+        <div class="event-org">আহমদিয়া সিরিকোটিয়া ইসলামিক সংঘ এর উদ্যোগে</div>
+        <div class="event-title">১৫তম ঈদে মিলাদুন্নবী (সা:) মাহফিল ২০২৬ ইং</div>
+        <div class="arch-divider"></div>
+      </div>
+
+      <div class="page-title">ড্যাশবোর্ড</div>
+      <div class="page-sub">সার্বিক হিসাবের সংক্ষিপ্ত চিত্র</div>
+
+      <div class="summary-row">
+        <div class="summary-card">
+          <div class="label">মোট চাঁদা সংগ্রহ</div>
+          <div class="value" id="totalCollection">৳ ০</div>
+        </div>
+        <div class="summary-card expense">
+          <div class="label">মোট খরচ</div>
+          <div class="value" id="totalExpense">৳ ০</div>
+        </div>
+        <div class="summary-card balance">
+          <div class="label">হাতে আছে (ব্যালেন্স)</div>
+          <div class="value" id="balance">৳ ০</div>
+        </div>
+      </div>
+
+      <div class="panel-head">
+        <h3>এমাউন্ট অনুযায়ী চাঁদার হিসাব</h3>
+      </div>
+      <div class="page-sub" style="margin-top:-14px;">যেকোনো বক্সে ক্লিক করলে নিচে ফিল্টার হয়ে সেই এমাউন্টের তালিকা দেখাবে</div>
+      <div class="stat-grid" id="tierGrid"><!-- filled by JS --></div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3 id="filteredTitle">সব চাঁদার তালিকা</h3>
+          <button class="btn btn-ghost" id="clearFilterBtn">ফিল্টার মুছুন</button>
+        </div>
+        <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>নাম</th>
+              <th>ঠিকানা</th>
+              <th>রেফারেন্স</th>
+              <th>তারিখ</th>
+              <th class="amount">এমাউন্ট</th>
+            </tr>
+          </thead>
+          <tbody id="dashboardTableBody">
+            <tr class="empty-row"><td colspan="5">লোড হচ্ছে...</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== CHANDA ===== -->
+    <section class="section" id="section-chanda">
+      <div class="page-title">চাঁদা সংগ্রহ</div>
+      <div class="page-sub">নতুন চাঁদা যোগ করুন অথবা তালিকা দেখুন</div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>নতুন চাঁদা যোগ করুন</h3></div>
+        <div id="chandaMsg" class="msg"></div>
+        <form id="chandaForm">
+          <div class="form-grid">
+            <div>
+              <label>দাতার নাম *</label>
+              <input type="text" id="c_name" required placeholder="যেমন: মোঃ করিম উদ্দিন">
+            </div>
+            <div>
+              <label>ঠিকানা</label>
+              <input type="text" id="c_address" placeholder="যেমন: উত্তরপাড়া">
+            </div>
+            <div>
+              <label>রেফারেন্স (কার মাধ্যমে সংগৃহীত)</label>
+              <input type="text" id="c_reference" placeholder="যেমন: রহিম ভাই">
+            </div>
+            <div>
+              <label>এমাউন্ট (টাকা) *</label>
+              <input type="number" id="c_amount" required min="1" placeholder="৫০০">
+            </div>
+            <div>
+              <label>তারিখ</label>
+              <input type="date" id="c_date">
+            </div>
+          </div>
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary" id="chandaSubmitBtn">যোগ করুন</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head">
+          <h3>সব চাঁদার তালিকা</h3>
+          <div class="filter-chip-row" id="chandaChips"><!-- filled by JS --></div>
+        </div>
+        <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>নাম</th>
+              <th>ঠিকানা</th>
+              <th>রেফারেন্স</th>
+              <th>তারিখ</th>
+              <th class="amount">এমাউন্ট</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="chandaTableBody">
+            <tr class="empty-row"><td colspan="6">লোড হচ্ছে...</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== KHAROCH ===== -->
+    <section class="section" id="section-kharoch">
+      <div class="page-title">খরচের হিসাব</div>
+      <div class="page-sub">মাহফিলের খরচ যোগ করুন এবং তালিকা দেখুন</div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>নতুন খরচ যোগ করুন</h3></div>
+        <div id="kharochMsg" class="msg"></div>
+        <form id="kharochForm">
+          <div class="form-grid">
+            <div>
+              <label>খরচের খাত *</label>
+              <input type="text" id="k_title" required placeholder="যেমন: প্যান্ডেল ভাড়া">
+            </div>
+            <div>
+              <label>এমাউন্ট (টাকা) *</label>
+              <input type="number" id="k_amount" required min="1" placeholder="৫০০০">
+            </div>
+            <div>
+              <label>তারিখ</label>
+              <input type="date" id="k_date">
+            </div>
+          </div>
+          <div style="margin-top:14px;">
+            <label>বিস্তারিত (ঐচ্ছিক)</label>
+            <textarea id="k_desc" placeholder="বিস্তারিত নোট..."></textarea>
+          </div>
+          <div class="btn-row">
+            <button type="submit" class="btn btn-primary" id="kharochSubmitBtn">যোগ করুন</button>
+          </div>
+        </form>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>সব খরচের তালিকা</h3></div>
+        <div style="overflow-x:auto;">
+        <table>
+          <thead>
+            <tr>
+              <th>খাত</th>
+              <th>বিস্তারিত</th>
+              <th>তারিখ</th>
+              <th class="amount">এমাউন্ট</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="kharochTableBody">
+            <tr class="empty-row"><td colspan="5">লোড হচ্ছে...</td></tr>
+          </tbody>
+        </table>
+        </div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ===== নাত প্লেয়ার =====
+     naat.mp3 ফাইলটা এই প্রজেক্ট ফোল্ডারে রাখুন (আপনার নিজের অনুমতিপ্রাপ্ত/লাইসেন্সকৃত অডিও)।
+     ব্রাউজার নিরাপত্তার কারণে সাউন্ডসহ auto-play ব্লক করতে পারে — তাই একটা বাটনও রাখা হলো। -->
+<div class="naat-player" id="naatPlayer">
+  <audio id="naatAudio" loop preload="auto">
+    <source src="naat.mp3" type="audio/mpeg">
+  </audio>
+  <button id="naatToggleBtn" class="naat-btn" title="নাত চালু/বন্ধ করুন">🔊 নাত</button>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script src="firebase-config.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
