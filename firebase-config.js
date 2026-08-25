@@ -4,12 +4,12 @@
 // থেকে এই মানগুলো কপি করে আনবেন। বিস্তারিত README.md ফাইলে আছে।
 // ============================================================
 const firebaseConfig = {
-  apiKey: "PASTE_YOUR_API_KEY_HERE",
-  authDomain: "PASTE_YOUR_PROJECT.firebaseapp.com",
-  projectId: "PASTE_YOUR_PROJECT_ID",
-  storageBucket: "PASTE_YOUR_PROJECT.appspot.com",
-  messagingSenderId: "PASTE_SENDER_ID",
-  appId: "PASTE_APP_ID"
+  apiKey: "AIzaSyBd8SELqb-VW8qhv5ikzcJ6EBWo8JTBC-w",
+  authDomain: "milad-mahfil-hishab.firebaseapp.com",
+  projectId: "milad-mahfil-hishab",
+  storageBucket: "milad-mahfil-hishab.firebasestorage.app",
+  messagingSenderId: "551678532386",
+  appId: "1:551678532386:web:52d82c9ad1ae65f816237b"
 };
 
 firebase.initializeApp(firebaseConfig);
