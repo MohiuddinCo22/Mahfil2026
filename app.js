@@ -67,6 +67,7 @@ function startListeners() {
     chandaData = snap.docs.map(d => ({ id: d.id, ...d.data() }));
     renderDashboard();
     renderChandaList();
+    renderTabarruk();
   }, err => console.error('chanda listener error:', err));
 
   db.collection('kharoch').orderBy('createdAt', 'desc').onSnapshot(snap => {
@@ -244,6 +245,75 @@ function renderChandaList() {
   });
 }
 let chandaListFilter = null;
+
+// ===================== তবরুক বিতরণ =====================
+let tabarrukLocationFilter = '';
+
+function renderTabarruk() {
+  const select = document.getElementById('tabarrukLocationSelect');
+  const uniqueLocations = [...new Set(chandaData.map(c => (c.address || '').trim()).filter(Boolean))].sort();
+  select.innerHTML = '<option value="">লোকেশন অনুযায়ী দেখুন...</option>' +
+    uniqueLocations.map(l => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
+  select.value = tabarrukLocationFilter;
+
+  let rows = chandaData;
+  let title = 'সব দাতার তালিকা';
+  if (tabarrukLocationFilter) {
+    rows = chandaData.filter(c => (c.address || '').trim() === tabarrukLocationFilter);
+    title = tabarrukLocationFilter + ' — দাতাদের তালিকা';
+  }
+  document.getElementById('tabarrukListTitle').textContent = title + ' (' + rows.length + ' জন)';
+
+  const doneCount = rows.filter(c => c.tabarrukReceived).length;
+  document.getElementById('tabTotalCount').textContent = rows.length;
+  document.getElementById('tabDoneCount').textContent = doneCount;
+  document.getElementById('tabPendingCount').textContent = rows.length - doneCount;
+
+  const body = document.getElementById('tabarrukTableBody');
+  body.innerHTML = '';
+  if (rows.length === 0) {
+    body.innerHTML = '<tr class="empty-row"><td colspan="5">কোনো তথ্য নেই</td></tr>';
+    return;
+  }
+  rows.forEach(c => {
+    const tr = document.createElement('tr');
+    const statusHtml = c.tabarrukReceived
+      ? `<span class="tag" data-id="${c.id}" data-action="undo" style="cursor:pointer;" title="ভুল হলে ক্লিক করে বাতিল করুন">✅ Done</span>`
+      : `<button class="btn btn-primary" style="padding:7px 16px; font-size:13px;" data-id="${c.id}" data-action="receive">রিসিভ করুন</button>`;
+    tr.innerHTML = `
+      <td>${escapeHtml(c.name || '-')}</td>
+      <td>${escapeHtml(c.address || '-')}</td>
+      <td>${escapeHtml(c.reference || '-')}</td>
+      <td class="amount">${taka(c.amount)}</td>
+      <td>${statusHtml}</td>
+    `;
+    body.appendChild(tr);
+  });
+
+  body.querySelectorAll('[data-action="receive"]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      db.collection('chanda').doc(btn.dataset.id).update({
+        tabarrukReceived: true,
+        tabarrukReceivedAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    });
+  });
+  body.querySelectorAll('[data-action="undo"]').forEach(tag => {
+    tag.addEventListener('click', () => {
+      if (confirm('তবরুক বিতরণ বাতিল করতে চান?')) {
+        db.collection('chanda').doc(tag.dataset.id).update({
+          tabarrukReceived: false,
+          tabarrukReceivedAt: null
+        });
+      }
+    });
+  });
+}
+
+document.getElementById('tabarrukLocationSelect').addEventListener('change', (e) => {
+  tabarrukLocationFilter = e.target.value;
+  renderTabarruk();
+});
 
 // ===================== KHAROCH CRUD =====================
 document.getElementById('k_date').value = todayISO();
