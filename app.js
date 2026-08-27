@@ -246,21 +246,23 @@ function renderChandaList() {
 }
 let chandaListFilter = null;
 
-// ===================== তবরুক বিতরণ =====================
-let tabarrukLocationFilter = '';
+ // ===================== তবরুক বিতরণ =====================
+let tabarrukAmountFilter = null; // null | tier number | 'other'
 
 function renderTabarruk() {
-  const select = document.getElementById('tabarrukLocationSelect');
-  const uniqueLocations = [...new Set(chandaData.map(c => (c.address || '').trim()).filter(Boolean))].sort();
-  select.innerHTML = '<option value="">লোকেশন অনুযায়ী দেখুন...</option>' +
-    uniqueLocations.map(l => `<option value="${escapeHtml(l)}">${escapeHtml(l)}</option>`).join('');
-  select.value = tabarrukLocationFilter;
+  const select = document.getElementById('tabarrukAmountSelect');
+  select.innerHTML = '<option value="">এমাউন্ট অনুযায়ী দেখুন...</option>' +
+    [...TIERS, 'other'].map(t => `<option value="${t}">${tierLabel(t)}</option>`).join('');
+  select.value = tabarrukAmountFilter === null ? '' : tabarrukAmountFilter;
 
   let rows = chandaData;
   let title = 'সব দাতার তালিকা';
-  if (tabarrukLocationFilter) {
-    rows = chandaData.filter(c => (c.address || '').trim() === tabarrukLocationFilter);
-    title = tabarrukLocationFilter + ' — দাতাদের তালিকা';
+  if (tabarrukAmountFilter !== null) {
+    rows = chandaData.filter(c => {
+      const amt = Number(c.amount) || 0;
+      return tabarrukAmountFilter === 'other' ? !TIERS.includes(amt) : amt === Number(tabarrukAmountFilter) || (tabarrukAmountFilter === 'other');
+    });
+    title = tierLabel(tabarrukAmountFilter === 'other' ? 'other' : Number(tabarrukAmountFilter)) + ' এর দাতাদের তালিকা';
   }
   document.getElementById('tabarrukListTitle').textContent = title + ' (' + rows.length + ' জন)';
 
@@ -310,11 +312,11 @@ function renderTabarruk() {
   });
 }
 
-document.getElementById('tabarrukLocationSelect').addEventListener('change', (e) => {
-  tabarrukLocationFilter = e.target.value;
+document.getElementById('tabarrukAmountSelect').addEventListener('change', (e) => {
+  const val = e.target.value;
+  tabarrukAmountFilter = val === '' ? null : (val === 'other' ? 'other' : Number(val));
   renderTabarruk();
 });
-
 // ===================== KHAROCH CRUD =====================
 document.getElementById('k_date').value = todayISO();
 
