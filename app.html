@@ -22,6 +22,7 @@
       <div class="nav-item active" data-section="dashboard">📊 ড্যাশবোর্ড</div>
       <div class="nav-item" data-section="chanda">💰 চাঁদা</div>
       <div class="nav-item" data-section="kharoch">🧾 খরচ</div>
+      <div class="nav-item" data-section="tabarruk">🍽️ তবরুক বিতরণ</div>
     </nav>
     <div class="sidebar-foot">
       <div class="who">লগইন: <span id="whoEmail">...</span></div>
@@ -204,7 +205,45 @@
         </div>
       </div>
     </section>
+<!-- ===== তবরুক বিতরণ ===== -->
+<section class="section" id="section-tabarruk">
+  <div class="page-title">তবরুক বিতরণ</div>
+  <div class="page-sub">লোকেশন অনুযায়ী ফিল্টার করে কাকে তবরুক দেওয়া হয়েছে তা চিহ্নিত করুন</div>
 
+  <div class="panel">
+    <div class="panel-head">
+      <h3 id="tabarrukListTitle">সব দাতার তালিকা</h3>
+      <select class="filter-select" id="tabarrukLocationSelect">
+        <option value="">লোকেশন অনুযায়ী দেখুন...</option>
+      </select>
+    </div>
+
+    <div class="stat-grid" style="grid-template-columns: repeat(auto-fit,minmax(140px,1fr)); margin-bottom:18px;">
+      <div class="summary-card" style="padding:14px 16px;">
+        <div class="label">মোট</div><div class="value" id="tabTotalCount" style="font-size:20px;">০</div>
+      </div>
+      <div class="summary-card" style="background:linear-gradient(135deg,#1F5C3D,#164A30); padding:14px 16px;">
+        <div class="label">বিতরণ সম্পন্ন</div><div class="value" id="tabDoneCount" style="font-size:20px;">০</div>
+      </div>
+      <div class="summary-card expense" style="padding:14px 16px;">
+        <div class="label">বাকি আছে</div><div class="value" id="tabPendingCount" style="font-size:20px;">০</div>
+      </div>
+    </div>
+
+    <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th>নাম</th><th>ঠিকানা</th><th>রেফারেন্স</th><th class="amount">এমাউন্ট</th><th>অবস্থা</th>
+        </tr>
+      </thead>
+      <tbody id="tabarrukTableBody">
+        <tr class="empty-row"><td colspan="5">লোড হচ্ছে...</td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</section>
   </main>
 </div>
 
