@@ -167,6 +167,7 @@ document.getElementById('chandaForm').addEventListener('submit', (e) => {
   const msgEl = document.getElementById('chandaMsg');
   const name = document.getElementById('c_name').value.trim();
   const address = document.getElementById('c_address').value.trim();
+  const phone = document.getElementById('c_phone').value.trim();
   const reference = document.getElementById('c_reference').value.trim();
   const amount = Number(document.getElementById('c_amount').value);
   const date = document.getElementById('c_date').value || todayISO();
@@ -178,7 +179,7 @@ document.getElementById('chandaForm').addEventListener('submit', (e) => {
 
   btn.disabled = true;
   db.collection('chanda').add({
-    name, address, reference, amount,
+    name, address, phone, reference, amount,
     dateStr: date,
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
     createdBy: currentUser.email
@@ -228,6 +229,7 @@ function renderChandaList() {
     tr.innerHTML = `
       <td>${escapeHtml(c.name || '-')}</td>
       <td>${escapeHtml(c.address || '-')}</td>
+      <td>${escapeHtml(c.phone || '-')}</td>
       <td>${escapeHtml(c.reference || '-')}</td>
       <td>${fmtDate(c.createdAt)}</td>
       <td class="amount">${taka(c.amount)}</td>
