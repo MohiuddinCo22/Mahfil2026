@@ -202,6 +202,23 @@ a { color: inherit; }
 }
 .panel-head h3 { font-size: 17px; }
 
+.committee-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 22px;
+}
+.committee-card { text-align: center; }
+.committee-card img {
+  width: 108px; height: 108px; border-radius: 50%;
+  object-fit: cover; border: 3px solid var(--gold);
+  box-shadow: var(--shadow); background: var(--ivory);
+}
+.c-name {
+  font-family: 'Noto Serif Bengali', serif;
+  margin-top: 10px; font-weight: 700; color: var(--deep); font-size: 15px;
+}
+.c-role { font-size: 12.5px; color: var(--muted); margin-top: 2px; }
+
 .filter-chip-row { display: flex; gap: 8px; flex-wrap: wrap; }
 .chip {
   padding: 6px 14px; border-radius: 999px; border: 1px solid var(--border);
